@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">VVitalApp</string>
+    <string name="ble_not_supported">BLE is not supported</string>
+    <string name="error_bluetooth_not_supported">Bluetooth not supported.</string>
+
+    <string name="str_invalid_info_exception">Invalid slave response separator character.</string>
+    <string name="str_firmware_failed_reboot_device">Firmware update failed.Reboot your device and try again.</string>
+    <string name="str_firmware_failed">Firmware update failed.</string>
+    <string name="str_firmware_already_update">Firmware is already up to date</string>
+    <string name="str_new_firmware_available">New Firmware is available</string>
+    <string name="str_battery_low_for_firmware">Battery is low. You can not update the firmware.</string>
+
+    <string name="str_error_timeout">Error or Timeout</string>
+    <string name="str_not_connected">Peripheral not connected</string>
+    <string name="no_valid_result">No valid result available</string>
+    <string name="measurement_not_selected">Not measured</string>
+    <string name="finger_not_present">Finger Not Present error will occur</string>
+    <string name="SNR_failure">SNR failure</string>
+    <string name="str_location_dialog">Location services are needed for Bluetooth connectivity. Do you want to turn location services on?</string>
+</resources>

@@ -1,0 +1,2 @@
+include ':app', ':vital_smartvs_sdk'
+rootProject.name='VVitalApp'
