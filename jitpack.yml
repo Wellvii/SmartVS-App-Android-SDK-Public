@@ -1,17 +1,5 @@
 jdk:
-  - openjdk11
-
-before_install:
-  - echo "JitPack build starting"
-
-install:
-  - echo "Installing dependencies"
-
-before_script:
-  - echo "Running build"
+  - openjdk8
 
 script:
-  - ./gradlew build
-
-after_success:
-  - echo "Build completed successfully" 
+  - ./gradlew clean assembleRelease 

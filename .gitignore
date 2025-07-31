@@ -8,3 +8,4 @@ gradle/wrapper/gradle-wrapper.properties
 /captures
 .externalNativeBuild
 .cxx
+/vital_smartvs_sdk/build

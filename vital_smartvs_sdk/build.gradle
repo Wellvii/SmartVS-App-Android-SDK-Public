@@ -1,11 +1,9 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'maven-publish'
 
 android {
     compileSdkVersion 29
-
 
     defaultConfig {
         minSdkVersion 21
@@ -23,7 +21,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-        compileOptions {
+
+    compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -31,7 +30,6 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-
 }
 
 dependencies {
@@ -43,30 +41,6 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.google.code.gson:gson:2.8.5'
-}
-
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    archiveClassifier.set('sources')
-}
-
-afterEvaluate {
-    publishing {
-        publications {
-            create("release", MavenPublication) {
-                // ONLY access this after evaluation
-                if (project.components.findByName("release") != null) {
-                    from components.release
-                }
-
-                groupId = 'com.vvvital.vital_smartvs'
-                artifactId = 'vital_smartvs_sdk'
-                version = '1.0.1'
-
-                artifact sourcesJar
-            }
-        }
-    }
 }
 
 
