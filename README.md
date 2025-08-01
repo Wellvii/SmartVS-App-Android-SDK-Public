@@ -25,6 +25,6 @@ dependencies {
 }
 ```
 
-> 🔖 Replace `Tag` with the latest [GitHub Release Tag](https://jitpack.io/#Wellvii/SmartVS-App-Android-SDK-Public), such as `v1.0.0`.
+> 🔖 Replace `Tag` with the latest [GitHub Release Tag](https://jitpack.io/#Wellvii/SmartVS-App-Android-SDK-Public), such as `1.0.0`.
 
 ---
