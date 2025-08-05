@@ -35,5 +35,5 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation project(path: ':vital_smartvs_sdk')
-
+//    implementation 'com.github.Wellvii:SmartVS-App-Android-SDK-Public:1.0.0'
 }
