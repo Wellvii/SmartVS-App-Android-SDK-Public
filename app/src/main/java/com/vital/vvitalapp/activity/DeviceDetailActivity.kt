@@ -26,7 +26,7 @@ import com.vvvital.vital_smartvs.util.*
 import com.vital.vvitalapp.R
 import com.vital.vvitalapp.adapter.InfoAdapter
 import com.vital.vvitalapp.bean.*
-import kotlinx.android.synthetic.main.activity_device_detail.*
+import com.vital.vvitalapp.databinding.ActivityDeviceDetailBinding
 import java.util.*
 
 
@@ -37,7 +37,7 @@ import java.util.*
  * Bluetooth LE API.
  */
 class DeviceDetailActivity : Activity(), InfoAdapter.OnItemClick, PeripheralCallback {
-
+    private lateinit var binding: ActivityDeviceDetailBinding
     private var mDeviceName: String? = null
     private var mDeviceAddress: String? = null
     private var mVVitalManager: VVitalManager? = null
@@ -74,7 +74,8 @@ class DeviceDetailActivity : Activity(), InfoAdapter.OnItemClick, PeripheralCall
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_device_detail)
+        binding = ActivityDeviceDetailBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val intent = intent
         mDeviceName = intent.getStringExtra(EXTRAS_DEVICE_NAME)
@@ -89,90 +90,90 @@ class DeviceDetailActivity : Activity(), InfoAdapter.OnItemClick, PeripheralCall
     }
 
     private fun setUI() {
-        tvAddress.text = getString(R.string.str_device_address, mDeviceAddress)
+        binding.tvAddress.text = getString(R.string.str_device_address, mDeviceAddress)
         if (mConnected) {
-            tvState.text = getString(R.string.str_state, getString(R.string.connected))
+            binding.tvState.text = getString(R.string.str_state, getString(R.string.connected))
         } else {
-            tvState.text = getString(R.string.str_state, getString(R.string.disconnected))
+            binding.tvState.text = getString(R.string.str_state, getString(R.string.disconnected))
         }
 
-        rvInfo.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        rvMeasuInfo.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        binding.rvInfo.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        binding.rvMeasuInfo.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
 
         setDeviceInfoList(null)
 
         setAdapter()
 
-        tvInfo.performClick()
-        tvInfo.isSelected = true
-        tvInfo.setOnClickListener {
-            tvInfo.isSelected = true
-            tvMeasurement.isSelected = false
-            tvFirmware.isSelected = false
+        binding.tvInfo.performClick()
+        binding.tvInfo.isSelected = true
+        binding.tvInfo.setOnClickListener {
+            binding.tvInfo.isSelected = true
+            binding.tvMeasurement.isSelected = false
+            binding.tvFirmware.isSelected = false
 
-            rvInfo.visibility = View.VISIBLE
-            llMeasurement.visibility = View.GONE
-            llFirmware.visibility = View.GONE
+            binding.rvInfo.visibility = View.VISIBLE
+            binding.llMeasurement.visibility = View.GONE
+            binding.llFirmware.visibility = View.GONE
         }
 
-        tvMeasurement.setOnClickListener {
-            tvInfo.isSelected = false
-            tvMeasurement.isSelected = true
-            tvFirmware.isSelected = false
+        binding.tvMeasurement.setOnClickListener {
+            binding.tvInfo.isSelected = false
+            binding.tvMeasurement.isSelected = true
+            binding.tvFirmware.isSelected = false
 
-            rvInfo.visibility = View.GONE
-            llMeasurement.visibility = View.VISIBLE
-            llFirmware.visibility = View.GONE
+            binding.rvInfo.visibility = View.GONE
+            binding.llMeasurement.visibility = View.VISIBLE
+            binding.llFirmware.visibility = View.GONE
         }
 
-        tvFirmware.setOnClickListener {
-            tvInfo.isSelected = false
-            tvMeasurement.isSelected = false
-            tvFirmware.isSelected = true
+        binding.tvFirmware.setOnClickListener {
+            binding.tvInfo.isSelected = false
+            binding.tvMeasurement.isSelected = false
+            binding.tvFirmware.isSelected = true
 
-            rvInfo.visibility = View.GONE
-            llMeasurement.visibility = View.GONE
-            llFirmware.visibility = View.VISIBLE
-            llFirmware.invalidate()
+            binding.rvInfo.visibility = View.GONE
+            binding.llMeasurement.visibility = View.GONE
+            binding.llFirmware.visibility = View.VISIBLE
+            binding.llFirmware.invalidate()
         }
 
-        tvGetTemp.setOnClickListener {
-            tvBodyTemp.text = ""
+        binding.tvGetTemp.setOnClickListener {
+            binding.tvBodyTemp.text = ""
             //tvSurfaceTemp.text = ""
             //tvAmbientTemp.text = ""
 
-            if (rvMeasuInfo.visibility == View.VISIBLE) {
-                rvMeasuInfo.visibility = View.GONE // hide
+            if (binding.rvMeasuInfo.visibility == View.VISIBLE) {
+                binding.rvMeasuInfo.visibility = View.GONE // hide
             }
 
             mVVitalManager!!.readyToStartTemperature()
         }
 
-        tvSetDate.setOnClickListener {
+        binding.tvSetDate.setOnClickListener {
             Log.e("isPeripheralConnected", "" + mVVitalManager!!.isDeviceConnected())
             mVVitalManager!!.setCurrentDate()
         }
 
-        tvMesuCommand.setOnClickListener {
+        binding.tvMesuCommand.setOnClickListener {
             popupWindow()
         }
 
-        tvStart.setOnClickListener {
+        binding.tvStart.setOnClickListener {
 
-            if ("Stop".equals(tvStart.text.toString(), true)) {
+            if ("Stop".equals(binding.tvStart.text.toString(), true)) {
                 mVVitalManager!!.stopMeasurement(selectedCommand)
-            } else if ("Start".equals(tvStart.text.toString(), true)) {
+            } else if ("Start".equals(binding.tvStart.text.toString(), true)) {
                 mVVitalManager!!.startMeasurement(selectedCommand)
             }
         }
 
-        tvUpdateFW.setOnClickListener {
-            tvFirmwareType.text = "Downloading..."
+        binding.tvUpdateFW.setOnClickListener {
+            binding.tvFirmwareType.text = "Downloading..."
             mVVitalManager!!.updateFirmware()
 
         }
 
-        versionInformation.setOnClickListener {
+        binding.versionInformation.setOnClickListener {
             var versionInformation = mVVitalManager!!.versionInformation()
             Log.e("VersionInformation",versionInformation)
 
@@ -254,7 +255,7 @@ class DeviceDetailActivity : Activity(), InfoAdapter.OnItemClick, PeripheralCall
 
             //mVVitalManager!!.stopMeasurement(selectedCommand)
             if (mVVitalManager != null) {
-                tvMesuCommand.text = selectedText
+                binding.tvMesuCommand.text = selectedText
                 mVVitalManager!!.readyToStartMeasurement(selectedCommand)
             }
         }
@@ -264,9 +265,9 @@ class DeviceDetailActivity : Activity(), InfoAdapter.OnItemClick, PeripheralCall
         }
 
         // Finally, show the popup window on app
-        TransitionManager.beginDelayedTransition(root_layout)
+        TransitionManager.beginDelayedTransition(binding.root)
         popupWindow.showAtLocation(
-            root_layout, // Location to display popup window
+            binding.root, // Location to display popup window
             Gravity.CENTER, // Exact position of layout to display popup
             0, // X offset
             0 // Y offset
@@ -277,7 +278,7 @@ class DeviceDetailActivity : Activity(), InfoAdapter.OnItemClick, PeripheralCall
         if (infoAdapter == null) {
             infoAdapter = InfoAdapter(infoList)
             infoAdapter!!.setOnItemClick(this)
-            rvInfo.adapter = infoAdapter
+            binding.rvInfo.adapter = infoAdapter
         } else {
             runOnUiThread { infoAdapter!!.notifyDataSetChanged() }
         }
@@ -351,7 +352,7 @@ class DeviceDetailActivity : Activity(), InfoAdapter.OnItemClick, PeripheralCall
 
         infoAdapter = InfoAdapter(measuInfoList)
         infoAdapter!!.setOnItemClick(this)
-        rvMeasuInfo.adapter = infoAdapter
+        binding.rvMeasuInfo.adapter = infoAdapter
     }
 
     private fun setMeasuInfoList(measuInfo: MeasuInfo?) {
@@ -486,7 +487,7 @@ class DeviceDetailActivity : Activity(), InfoAdapter.OnItemClick, PeripheralCall
 
     private fun updateConnectionState(resourceId: Int) {
         runOnUiThread {
-            tvState!!.text = getString(R.string.str_state, getString(resourceId))
+            binding.tvState!!.text = getString(R.string.str_state, getString(resourceId))
         }
     }
 
@@ -547,15 +548,15 @@ class DeviceDetailActivity : Activity(), InfoAdapter.OnItemClick, PeripheralCall
 
                         runOnUiThread {
 
-                            if (tvMessage.visibility == View.VISIBLE) {
-                                tvMessage.visibility = View.INVISIBLE
+                            if (binding.tvMessage.visibility == View.VISIBLE) {
+                                binding.tvMessage.visibility = View.INVISIBLE
                             }
 
                             if (response.bodyTemperature.matches("-?\\d+(\\.\\d+)?".toRegex())) {
-                                tvBodyTemp.text =
+                                binding.tvBodyTemp.text =
                                     response.bodyTemperature + response.bodyTemperature_Unit
                             } else {
-                                tvBodyTemp.text = response.bodyTemperature
+                                binding.tvBodyTemp.text = response.bodyTemperature
                             }
 
                             if (mVVitalManager != null) {
@@ -567,12 +568,12 @@ class DeviceDetailActivity : Activity(), InfoAdapter.OnItemClick, PeripheralCall
                         Log.e("onSuccess", "CODE_TEMPM status: ERROR - " + ResponseStatus.ERROR)
 
                         runOnUiThread {
-                            tvBodyTemp.text = getString(R.string.str_error_timeout)
+                            binding.tvBodyTemp.text = getString(R.string.str_error_timeout)
 
-                            if (tvMessage.visibility == View.INVISIBLE) {
-                                tvMessage.visibility = View.VISIBLE //set error message.
+                            if (binding.tvMessage.visibility == View.INVISIBLE) {
+                                binding.tvMessage.visibility = View.VISIBLE //set error message.
                             }
-                            tvMessage.text =
+                            binding.tvMessage.text =
                                 resources.getString(R.string.str_error_timeout).plus("\n")
                                     .plus(response.errorDesc)
 
@@ -589,12 +590,12 @@ class DeviceDetailActivity : Activity(), InfoAdapter.OnItemClick, PeripheralCall
             if (response is FWData) {
                 runOnUiThread {
                     if (response.fwStatus == 1) {
-                        tvProgressCount.text =
+                        binding.tvProgressCount.text =
                             "" + response.installedPacketCount + "/" + response.totalPackets
                         if (response.firmwareType.equals(mVVitalManager?.firmwareMainBoard, true)) {
-                            tvFirmwareType.text = "Downloading Main board firmware"
+                            binding.tvFirmwareType.text = "Downloading Main board firmware"
                         } else {
-                            tvFirmwareType.text = "Downloading Sensor board firmware"
+                            binding.tvFirmwareType.text = "Downloading Sensor board firmware"
                         }
                     } else if (response.fwStatus == 3) {
                         val dialogBuilder = AlertDialog.Builder(this)
@@ -631,11 +632,11 @@ class DeviceDetailActivity : Activity(), InfoAdapter.OnItemClick, PeripheralCall
                         Log.e("onSuccess", "CODE_MEASU status: READY - " + FWUpgradeState.READY)
                         runOnUiThread {
                             //show start button
-                            tvStart.visibility = View.VISIBLE
-                            tvStart.invalidate()
-                            tvStart.text = "Start"
+                            binding.tvStart.visibility = View.VISIBLE
+                            binding.tvStart.invalidate()
+                            binding.tvStart.text = "Start"
 
-                            rvMeasuInfo.visibility = View.GONE
+                            binding.rvMeasuInfo.visibility = View.GONE
 
 
                         }
@@ -645,9 +646,9 @@ class DeviceDetailActivity : Activity(), InfoAdapter.OnItemClick, PeripheralCall
                         runOnUiThread {
                             //stop text in start button
                             //stop text in start button
-                            tvStart.text = "Stop"
-                            tvMessage.visibility = View.VISIBLE
-                            tvMessage.text = "In Progress.."
+                            binding.tvStart.text = "Stop"
+                            binding.tvMessage.visibility = View.VISIBLE
+                            binding.tvMessage.text = "In Progress.."
                         }
                     }
                     response.status == FWUpgradeState.COMPLETE -> {
@@ -661,9 +662,9 @@ class DeviceDetailActivity : Activity(), InfoAdapter.OnItemClick, PeripheralCall
                                 mVVitalManager!!.stopMeasurement(selectedCommand)
                             }
 
-                            rvMeasuInfo.visibility = View.VISIBLE //
-                            tvMessage.visibility = View.INVISIBLE //hide message
-                            tvStart.visibility = View.GONE //hide start button
+                            binding.rvMeasuInfo.visibility = View.VISIBLE //
+                            binding.tvMessage.visibility = View.INVISIBLE //hide message
+                            binding.tvStart.visibility = View.GONE //hide start button
 
                             setMeasuInfoList(response) //Create list
                             setMeasuInfoAdapter() // set adapter
@@ -673,10 +674,10 @@ class DeviceDetailActivity : Activity(), InfoAdapter.OnItemClick, PeripheralCall
                         Log.e("onSuccess", "CODE_MEASU status: ERROR - " + FWUpgradeState.ERROR)
 
                         runOnUiThread {
-                            rvMeasuInfo.visibility = View.GONE
-                            tvStart.visibility = View.GONE //hide start button on error.
-                            tvMessage.visibility = View.VISIBLE //set error message.
-                            tvMessage.text =
+                            binding.rvMeasuInfo.visibility = View.GONE
+                            binding.tvStart.visibility = View.GONE //hide start button on error.
+                            binding.tvMessage.visibility = View.VISIBLE //set error message.
+                            binding.tvMessage.text =
                                 resources.getString(R.string.str_error_timeout).plus("\n")
                                     .plus(response.errorDesc)
 
@@ -702,10 +703,10 @@ class DeviceDetailActivity : Activity(), InfoAdapter.OnItemClick, PeripheralCall
     override fun onException(errorMsg: String, command: String) {
         Log.e("onException", "command:$command, errorMsg:$errorMsg")
         runOnUiThread {
-            Snackbar.make(root_layout, errorMsg, Snackbar.LENGTH_LONG).show()
+            Snackbar.make(binding.root, errorMsg, Snackbar.LENGTH_LONG).show()
 
             if (command.equals(VSCommandName.CODE_FWUPGRADE, true)) {
-                tvFirmwareType.text = ""
+                binding.tvFirmwareType.text = ""
             }
         }
 

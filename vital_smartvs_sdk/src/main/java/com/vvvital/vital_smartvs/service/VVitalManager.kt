@@ -72,19 +72,31 @@ class VVitalManager : Service() {
 
     private val TAG = VVitalManager::class.java.simpleName
 
-    private val mHandler = object : Handler() {
+//    private val mHandler = object : Handler() {
+//        override fun handleMessage(msg: Message?) {
+//            if (currentPacket < totalPackets) {
+//                currentPacket++
+//                if (packetCount == 255) {
+//                    packetCount = 0
+//                } else {
+//                    packetCount++
+//                }
+//                setStartFirmwareDataTransfer()
+//            }
+//        }
+//    }
 
-        override fun handleMessage(msg: Message?) {
-            if (currentPacket < totalPackets) {
-                currentPacket++
-                if (packetCount == 255) {
-                    packetCount = 0
-                } else {
-                    packetCount++
-                }
-                setStartFirmwareDataTransfer()
+    private val mHandler = Handler(Looper.getMainLooper()) { msg ->
+        if (currentPacket < totalPackets) {
+            currentPacket++
+            if (packetCount == 255) {
+                packetCount = 0
+            } else {
+                packetCount++
             }
+            setStartFirmwareDataTransfer()
         }
+        true // Indicates the message is handled
     }
 
     // Implements callback methods for GATT events that the app cares about.  For example,

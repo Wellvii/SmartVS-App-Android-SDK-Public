@@ -9,6 +9,8 @@
     <string name="disconnected">Disconnected</string>
     <string name="title_devices">Vital Device Scan</string>
     <string name="error_bluetooth_not_supported">Bluetooth not supported.</string>
+    <string name="str_error_timeout">Error or Timeout</string>
+    <string name="str_location_dialog">Location services are needed for Bluetooth connectivity. Do you want to turn location services on?</string>
 
     <string name="unknown_device">Unknown device</string>
     <string name="unknown_characteristic">Unknown characteristic</string>
