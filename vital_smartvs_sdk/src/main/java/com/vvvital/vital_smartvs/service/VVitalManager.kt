@@ -1,10 +1,13 @@
 package com.vvvital.vital_smartvs.service
 
+import android.Manifest
 import android.app.Service
 import android.bluetooth.*
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.*
+import androidx.core.app.ActivityCompat
 import com.google.gson.Gson
 import com.vvvital.vital_smartvs.BuildConfig
 import com.vvvital.vital_smartvs.R
@@ -72,20 +75,6 @@ class VVitalManager : Service() {
 
     private val TAG = VVitalManager::class.java.simpleName
 
-//    private val mHandler = object : Handler() {
-//        override fun handleMessage(msg: Message?) {
-//            if (currentPacket < totalPackets) {
-//                currentPacket++
-//                if (packetCount == 255) {
-//                    packetCount = 0
-//                } else {
-//                    packetCount++
-//                }
-//                setStartFirmwareDataTransfer()
-//            }
-//        }
-//    }
-
     private val mHandler = Handler(Looper.getMainLooper()) { msg ->
         if (currentPacket < totalPackets) {
             currentPacket++
@@ -104,6 +93,15 @@ class VVitalManager : Service() {
     private val mGattCallback = object : BluetoothGattCallback() {
         override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
             if (newState == BluetoothProfile.STATE_CONNECTED) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    if (ActivityCompat.checkSelfPermission(
+                            this@VVitalManager,
+                            Manifest.permission.BLUETOOTH_CONNECT
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        return
+                    }
+                }
                 VSLog.e(TAG, gatt.device.name)
 
                 mConnectionState = STATE_CONNECTED
@@ -1131,6 +1129,15 @@ class VVitalManager : Service() {
 
         if (characteristicTwo != null) {
             //notify
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                if (ActivityCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.BLUETOOTH_CONNECT
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    return
+                }
+            }
             mBluetoothGatt!!.setCharacteristicNotification(characteristicTwo, true)
 
             val descriptor = characteristicTwo.getDescriptor(
@@ -1207,6 +1214,15 @@ class VVitalManager : Service() {
             && mBluetoothGatt != null
         ) {
             VSLog.d(TAG, "Trying to use an existing mBluetoothGatt for connection.")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                if (ActivityCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.BLUETOOTH_CONNECT
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    return false
+                }
+            }
             return if (mBluetoothGatt!!.connect()) {
                 mConnectionState =
                     STATE_CONNECTING
@@ -1244,6 +1260,15 @@ class VVitalManager : Service() {
             VSLog.w(TAG, "BluetoothAdapter not initialized")
             return
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.BLUETOOTH_CONNECT
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return
+            }
+        }
         mBluetoothGatt!!.disconnect()
     }
 
@@ -1254,6 +1279,15 @@ class VVitalManager : Service() {
     private fun close() {
         if (mBluetoothGatt == null) {
             return
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.BLUETOOTH_CONNECT
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return
+            }
         }
         mBluetoothGatt!!.close()
         mBluetoothGatt = null
@@ -1607,6 +1641,15 @@ class VVitalManager : Service() {
     private fun writeCharData(characteristic: BluetoothGattCharacteristic) {
         this.lastWriteCharacteristic = characteristic
         characteristic.writeType = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.BLUETOOTH_CONNECT
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return
+            }
+        }
         mBluetoothGatt!!.writeCharacteristic(characteristic)
     }
 

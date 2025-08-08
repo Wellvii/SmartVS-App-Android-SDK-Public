@@ -1,5 +1,6 @@
 package com.vital.vvitalapp.activity
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.ComponentName
@@ -487,7 +488,7 @@ class DeviceDetailActivity : Activity(), InfoAdapter.OnItemClick, PeripheralCall
 
     private fun updateConnectionState(resourceId: Int) {
         runOnUiThread {
-            binding.tvState!!.text = getString(R.string.str_state, getString(resourceId))
+            binding.tvState.text = getString(R.string.str_state, getString(resourceId))
         }
     }
 
@@ -500,6 +501,7 @@ class DeviceDetailActivity : Activity(), InfoAdapter.OnItemClick, PeripheralCall
         var EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS"
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onSuccess(jsonResponse: String, command: String) {
 
         if (command.equals(VSCommandName.CODE_DINFO, true)) {
