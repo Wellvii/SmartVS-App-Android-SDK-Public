@@ -53,6 +53,7 @@ class DeviceScanActivity : ListActivity(), PeripheralScanCallback {
         mLeDeviceListAdapter = LeDeviceListAdapter()
         listAdapter = mLeDeviceListAdapter
 
+        startFunction()
     }
 
     private fun startFunction() {
@@ -60,8 +61,12 @@ class DeviceScanActivity : ListActivity(), PeripheralScanCallback {
         if (!checkPermission()) {
             requestPermission()
         } else {
-            if (isLocationEnabled(this)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 scanDevices(true)
+            } else {
+                if (isLocationEnabled(this)) {
+                    scanDevices(true)
+                }
             }
         }
     }
@@ -72,7 +77,7 @@ class DeviceScanActivity : ListActivity(), PeripheralScanCallback {
         if (mLeDeviceListAdapter != null) {
             mLeDeviceListAdapter!!.clear()
             mLeDeviceListAdapter!!.notifyDataSetChanged()
-            startFunction()
+
         }
     }
 
@@ -98,11 +103,14 @@ class DeviceScanActivity : ListActivity(), PeripheralScanCallback {
             finish()
             return
         } else {
-            //Check location is enabled
-            if (!isLocationEnabled(this)) {
-                showLocationNotifyDialog(this)
-            } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 startFunction()
+            } else {
+                if (!isLocationEnabled(this)) {
+                    showLocationNotifyDialog(this)
+                } else {
+                    startFunction()
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
@@ -177,7 +185,6 @@ class DeviceScanActivity : ListActivity(), PeripheralScanCallback {
             val permissions = arrayOf(
                 Manifest.permission.BLUETOOTH_SCAN,
                 Manifest.permission.BLUETOOTH_CONNECT,
-                Manifest.permission.ACCESS_FINE_LOCATION
             )
             ActivityCompat.requestPermissions(this, permissions, PERMISSION_REQUEST_COARSE_LOCATION)
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -235,29 +242,14 @@ class DeviceScanActivity : ListActivity(), PeripheralScanCallback {
     private fun checkPermission(): Boolean {
         return when {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-                // Android 12+ (API 31+): Need Bluetooth and Location permissions
-                val scan = ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.BLUETOOTH_SCAN
-                ) == PackageManager.PERMISSION_GRANTED
-                val connect = ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.BLUETOOTH_CONNECT
-                ) == PackageManager.PERMISSION_GRANTED
-                val location = ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
-                scan && connect && location
+                val scan = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED
+                val connect = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
+                scan && connect
             }
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> {
-                // Android 6-11: Need Location permission
-                ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
             }
-            else -> true // Pre-Marshmallow: permissions granted at install time
+            else -> true
         }
     }
 
