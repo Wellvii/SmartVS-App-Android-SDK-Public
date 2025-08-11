@@ -1,15 +1,22 @@
 apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'org.jetbrains.kotlin.android'
 
     android {
-    compileSdkVersion 29
+        namespace 'com.vital.vvitalapp'
+        buildFeatures {
+            buildConfig true
+            viewBinding true
+        }
+
+    compileSdkVersion 34
     defaultConfig {
         applicationId "com.vital.vvitalapp"
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 35
         versionCode 2
         versionName "1.0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -19,6 +26,11 @@ apply plugin: 'kotlin-android-extensions'
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+}
+kotlin {
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 
@@ -35,5 +47,5 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation project(path: ':vital_smartvs_sdk')
-//    implementation 'com.github.Wellvii:SmartVS-App-Android-SDK-Public:1.0.0'
+//    implementation 'com.github.Wellvii:SmartVS-App-Android-SDK-Public:1.0.2'
 }
