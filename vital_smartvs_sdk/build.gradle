@@ -50,4 +50,44 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
 }
 
+// Ensure JitPack-provided coordinates are used
+group = (project.findProperty('group') ?: 'com.github.Wellvii')
+version = (project.findProperty('version') ?: '1.0.2')
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                groupId = project.group.toString()
+                artifactId = 'vital_smartvs_sdk'
+                version = project.version.toString()
+                from components.release
+
+                pom {
+                    name = 'vital_smartvs_sdk'
+                    description = 'Vital SmartVS BLE SDK'
+                    url = 'https://github.com/Wellvii/SmartVS-App-Android-SDK-Public'
+                    licenses {
+                        license {
+                            name = 'The MIT License'
+                            url = 'https://opensource.org/licenses/MIT'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = 'Wellvii'
+                            name = 'Wellvii'
+                        }
+                    }
+                    scm {
+                        url = 'https://github.com/Wellvii/SmartVS-App-Android-SDK-Public'
+                        connection = 'scm:git:git://github.com/Wellvii/SmartVS-App-Android-SDK-Public.git'
+                        developerConnection = 'scm:git:ssh://github.com/Wellvii/SmartVS-App-Android-SDK-Public.git'
+                    }
+                }
+            }
+        }
+    }
+}
+
 

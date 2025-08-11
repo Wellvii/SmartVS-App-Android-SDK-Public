@@ -2,4 +2,4 @@ jdk:
   - openjdk17
 
 script:
-  - ./gradlew clean assembleRelease 
+  - ./gradlew clean assembleRelease publishToMavenLocal -xlint -xandroidLint
