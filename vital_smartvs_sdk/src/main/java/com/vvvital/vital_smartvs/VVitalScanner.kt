@@ -145,11 +145,12 @@ class VVitalScanner(private val mContext: Activity, private val smartVSDeviceSca
                 return
             }
 
-            if (!isLocationEnabled()) {
-                Toast.makeText(mContext, "Please turn on location", Toast.LENGTH_LONG).show()
-                return
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+                if (!isLocationEnabled()) {
+                    Toast.makeText(mContext, "Please turn on location", Toast.LENGTH_LONG).show()
+                    return
+                }
             }
-
 
             if (!hasScanPermissions()) {
                 requestScanPermissions()
